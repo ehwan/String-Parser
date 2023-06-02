@@ -6,6 +6,7 @@
 
 namespace eh { namespace parser {
 
+// virtual class version of template PARSER
 template < typename Ret , typename Iterator >
 class rule
   : public rules::base_t<rule<Ret,Iterator>>

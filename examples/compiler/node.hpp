@@ -45,6 +45,8 @@ struct node_statements
     if( right ){ right->emit( p ); }
   }
 };
+
+// constant numbers
 struct node_num
   : node_t
 {
@@ -58,6 +60,8 @@ struct node_num
 
   void emit( program_t *p );
 };
+
+// variable
 struct node_var
   : node_t
 {
@@ -70,6 +74,8 @@ struct node_var
   }
   void emit( program_t *p );
 };
+
+// print statement
 struct node_print
   : node_t
 {
@@ -79,6 +85,8 @@ struct node_print
   }
   void emit( program_t *p );
 };
+
+// read statement
 struct node_read
   : node_t
 {
@@ -90,6 +98,8 @@ struct node_read
   }
   void emit( program_t *p );
 };
+
+// assign value to variable
 struct node_assign
   : node_t
 {
@@ -103,6 +113,8 @@ struct node_assign
   void emit( program_t *p );
 };
 
+// unary operations;
+// ++, --, ...
 struct node_unaryop
   : node_t
 {
@@ -115,6 +127,9 @@ struct node_unaryop
 
   void emit( program_t *p );
 };
+
+// binary operations;
+// a + b, a - b, ...
 struct node_binaryop
   : node_t
 {
@@ -126,6 +141,9 @@ struct node_binaryop
   }
   void emit( program_t *p );
 };
+
+
+// jump labels
 struct node_label
   : node_t
 {
@@ -139,6 +157,8 @@ struct node_label
   }
   void emit( program_t *p );
 };
+
+// goto statement
 struct node_goto
   : node_t
 {
@@ -153,6 +173,8 @@ struct node_goto
   }
   void emit( program_t *p );
 };
+
+// return statement
 struct node_return
   : node_t
 {

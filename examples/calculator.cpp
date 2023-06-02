@@ -28,12 +28,12 @@ int main()
     eh::parser::repeat( eh::parser::digit0, 1, 10000 ),
     []( auto &v )
     {
-    int x = 0;
-    for( int i : v )
-    {
-    x = x *10 + i-'0';
-    }
-    return x;
+      int x = 0;
+      for( int i : v )
+      {
+      x = x *10 + i-'0';
+      }
+      return x;
     } );
   rule_t expr;
   rule_t expr0 = num;
@@ -57,8 +57,8 @@ int main()
   std::string str;
   while( std::cin >> str )
   {
-  auto b = str.begin();
-  auto ret = expr.parse( b , str.end() );
-  std::cout << ret.get() << std::endl;
+    auto b = str.begin();
+    auto ret = expr.parse( b , str.end() );
+    std::cout << ret.get() << std::endl;
   }
 }
