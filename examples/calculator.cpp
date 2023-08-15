@@ -39,26 +39,47 @@ int main()
   rule_t expr0 = num;
   rule_t expr1;
   expr1 =
-    ( expr0.ref() >> '*'_p >> expr1.ref() )[(
-        []( int a , char x , int b )->int
+    eh::parser::action(
+      expr0.ref() 
+      >> eh::parser::repeat(
+        (('*'_p).unused() >> expr0.ref()),
+        0,
+        100000
+      ),
+      []( int e1, std::vector<int> &rights )
+      {
+        for( int i : rights )
         {
-          return a * b;
-        })] | expr0.ref();
+          e1 *= i;
+        }
+        return e1;
+      }
+    );
   rule_t expr2;
   expr2 =
-    ( expr1.ref() >> '+'_p >> expr2.ref() )[(
-        []( int a , char x , int b )->int
+    eh::parser::action(
+      expr1.ref() 
+      >> eh::parser::repeat(
+        (('+'_p).unused() >> expr1.ref()),
+        0,
+        100000
+      ),
+      []( int e1, std::vector<int> &rights )
+      {
+        for( int i : rights )
         {
-          return a + b;
-        })] | expr1.ref();
+          e1 += i;
+        }
+        return e1;
+      }
+    );
 
   expr = expr2;
 
-  std::string str;
-  while( std::cin >> str )
-  {
-    auto b = str.begin();
-    auto ret = expr.parse( b , str.end() );
-    std::cout << ret.get() << std::endl;
-  }
+  std::string str = "1+2*3";
+  auto begin = str.begin();
+  auto result = expr.parse( begin, str.end() );
+  std::cout << "Input String : " << str << "\n";
+  std::cout << "Parse Result : " << result.is_valid() << "\n";
+  std::cout << "Parse Data : " << result.get() << "\n";
 }
