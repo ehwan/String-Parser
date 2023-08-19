@@ -20,6 +20,9 @@ struct accum_t
     return data;
   }
 };
+
+// This virtual class can be assigned as any parser
+// for recurssive pattern matching
 using rule_t = eh::parser::rule<int,std::string::iterator>;
 
 int main()
