@@ -1,3 +1,4 @@
+#include <ios>
 #include <iostream>
 #include <string>
 
@@ -80,6 +81,6 @@ int main()
   auto begin = str.begin();
   auto result = expr.parse( begin, str.end() );
   std::cout << "Input String : " << str << "\n";
-  std::cout << "Parse Result : " << result.is_valid() << "\n";
+  std::cout << "Parse Result : " << std::boolalpha << result.is_valid() << "\n";
   std::cout << "Parse Data : " << result.get() << "\n";
 }
