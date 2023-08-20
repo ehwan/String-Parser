@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
-set( LANGUAGE CXX )
 
 add_compile_options( -O2 -std=c++17 )
 
@@ -12,4 +11,11 @@ add_executable(basic
 project( calculator )
 add_executable(calculator
   examples/calculator.cpp
+)
+
+set_target_properties(
+  basic calculator
+  PROPERTIES
+  LANGUAGE CXX
+  CXX_STANDARD 17
 )
