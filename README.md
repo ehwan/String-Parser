@@ -156,14 +156,40 @@ There are several *Parser Object Wrapper* that takes other Parser Object and per
 `or_( parser1, parser2, ... , parserN )`
 will test every N parsers until one of them is successfully matched.
 `Attribute` of `or( p1, p2, ..., pn )` is `Attribute` of `p1` if every parsers have same `Attribute`, else `unused_t`.
+| Parser1 | Parser2 | Merged |
+|---------|---------|--------|
+| `unused_t` | `unused_t` | `unused_t` |
+| `unused_t` | `T` | `T` |
+| `T` | `unused_t` | `T` |
+| `T1` | `T2` | `unused_t` |
+
+Table: Merged Attribute of `or_` Parser
 
 `seq( parser1, parser2, ..., parserN )`
 will test every N parsers sequentially.
 `Attribute` of seq( p1, p2, ..., pn ) is `tuple< Attribute of p1, Attribute of p2, ..., Attribute of pn >`, `unused_t` will not be captured into tuple.
 
+| Parser1 | Parser2 | Merged |
+|---------|---------|--------|
+| `unused_t` | `unused_t` | `unused_t` |
+| `unused_t` | `T` | `T` |
+| `T` | `unused_t` | `T` |
+| `T1` | `T2` | `tuple<T1,T2>` |
+| `T1` | `tuple<Ts...>` | `tuple<T1,Ts...>` |
+| `tuple<Ts...>` | `T2` | `tuple<Ts...,T2>` |
+
+Table: Merged Attribute of `seq` Parser
+
 `repeat( parser, min_, max_ )`
 will test 'parser' X times where X is in range [min_,max_].
 `Attribute` of repeat( p ) is `vector< Attribute of p >` if `Attribute of p` is not `unused_t`, else `unused_t`.
+
+| Child Parser | `Attribute` of `repeat` |
+|---------|---------|
+| `unused_t` | `unused_t` |
+| `T` | `vector<T>` |
+
+Table: New Attribute of `repeat` Parser
 
 ```cpp
   auto one_alphabet_parser = ep::or_( one_small_alphabet, one_big_alphabet );
@@ -207,5 +233,19 @@ If the functor does not return any value( a void function ), the `Attribute` of 
   std::cout << "New Attr : " << action_result.get() << "\n";
 ```
 
+| Child Parser | Argument must be captured as |
+|--------------|--------|
+| `unused_t` | `functor()` |
+| `T attr` | `functor(attr)` |
+| `tuple<Ts...> attrs` | `functor( attrs... )` |
+
+Table: Functor and its argument
+
+| Returned Type | Attribute of `action` |
+|------|--------|
+| `void` | `unused_t` |
+| `T` | `T` |
+
+Table: functor's returned value and its Attribute
 
 There are more special Parser Wrapper for advaced Parser creation.
