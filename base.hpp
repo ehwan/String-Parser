@@ -50,36 +50,61 @@ struct base_t
     return static_cast<child_type const&>(*this);
   }
 
+  // REGEX '*' operator
+  // repeat 0 or more times
   repeat_t<CRTP> operator* () const;
+
+  // REGEX '+' operator
+  // repeat 1 or more times
   repeat_t<CRTP> operator+ () const;
 
+  // operator for action( this, f )
   template < typename F >
   decltype(auto)
   operator[] ( F &&f ) const;
 
+  // operator for or_( this, p )
   template < typename P >
   decltype(auto)
   operator| ( P p ) const;
 
+  // operator for seq( this, p )
   template < typename P >
   decltype(auto)
   operator>> ( P p ) const;
 
+  // operator for not_( this, p )
   template < typename P >
   decltype(auto)
   operator- ( P p ) const;
 
+  // same as attr()
+  // make its attrubute as x
   template < typename T >
   decltype(auto) operator()( T x ) const;
+
+  // make its attribute as x
   template < typename T >
   decltype(auto) attr( T x ) const;
+
+  // same as unused()
+  // make its attribute as unused_t
   decltype(auto) operator()() const;
+
+  // Its attribute will be iterator pair (begin,end) parse() consumed
   decltype(auto) pair() const;
+
+  // return itself as reference
+  // same usage as std::ref
   ref_t<CRTP> ref() const;
 
+  // make its attribute as unused_t
   attrunused_t<CRTP> unused() const;
+
+  // make parse() does not consume iterator
   notconsume_t<CRTP> notconsume() const;
 
+  // call constructor of T as functor
   template < typename T >
   decltype(auto) construct() const;
 };
