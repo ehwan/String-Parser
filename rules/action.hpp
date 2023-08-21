@@ -9,20 +9,24 @@
 
 namespace eh { namespace parser { namespace rules {
 
+// for specialization on invoking action
+// with unused_t, tuple<...>, normal data
 template < typename F , typename T >
 struct action_invoke;
 
 
+// for unused_t
 template < typename F >
 struct action_invoke<F,unused_t>
 {
-  // F()
+  // action does not take any arguments
   using result_type =
     typename std::decay<typename std::result_of<F()>::type>::type;
 
   template < typename Result >
   struct shell;
 
+  // if return_type of action is void, make it unused_t
   template <>
   struct shell<void>
   {
@@ -52,16 +56,19 @@ struct action_invoke<F,unused_t>
     return shell<result_type>::invoke( f );
   }
 };
+
+// for normal data
 template < typename F , typename T >
 struct action_invoke
 {
-  // F( t )
+  // F( t ), action takes only one data as argument
   using result_type =
     typename std::decay<typename std::result_of<F(T&)>::type>::type;
   
   template < typename Result >
   struct shell;
 
+  // if return_type of action is void, make it unused_t
   template <>
   struct shell<void>
   {
@@ -91,17 +98,20 @@ struct action_invoke
     return shell<result_type>::invoke( f , t );
   }
 };
+
+// for tuple
 template < typename F , typename ... Ts >
 struct action_invoke<F,std::tuple<Ts...>>
 {
   using tuple_type = std::tuple<Ts...>;
-  // F( Ts... )
+  // F( Ts... ), action takes unpacked tuple as arguments
   using result_type =
     typename std::decay<typename std::result_of<F(Ts&...)>::type>::type;
   
   template < typename Result >
   struct shell;
 
+  // if return_type of action is void, make it unused_t
   template <>
   struct shell<void>
   {

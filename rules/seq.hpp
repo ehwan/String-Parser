@@ -7,9 +7,12 @@
 
 namespace eh { namespace parser { namespace rules {
 
+
+// for specialization of tuple Attributes
 template < typename A , typename B >
 struct tuple_merge;
 
+// both Attributes are unused_t -> result Attribute is unused_t
 template <>
 struct tuple_merge<unused_t,unused_t>
 {
@@ -20,6 +23,8 @@ struct tuple_merge<unused_t,unused_t>
     return {};
   }
 };
+
+// one of Attributes is unused_t -> result Attribute is the normal one
 template < typename B >
 struct tuple_merge<unused_t,B>
 {
@@ -28,6 +33,16 @@ struct tuple_merge<unused_t,B>
   static type merge( unused_t , B b )
   {
     return b;
+  }
+};
+template < typename A >
+struct tuple_merge<A,unused_t>
+{
+  using type = A;
+
+  static type merge( A a , unused_t )
+  {
+    return a;
   }
 };
 template < typename ... Bs >
@@ -40,17 +55,20 @@ struct tuple_merge<unused_t,std::tuple<Bs...>>
     return b;
   }
 };
-
-template < typename A >
-struct tuple_merge<A,unused_t>
+template < typename ... As >
+struct tuple_merge<std::tuple<As...>,unused_t>
 {
-  using type = A;
+  using type = std::tuple<As...>;
 
-  static type merge( A a , unused_t )
+  static type merge( std::tuple<As...> a , unused_t )
   {
     return a;
   }
 };
+
+
+// two non-unused_t and non-tuple data
+// concat them as tuple
 template < typename A , typename B >
 struct tuple_merge
 {
@@ -61,6 +79,9 @@ struct tuple_merge
     return std::make_tuple( std::move(a) , std::move(b) );
   }
 };
+
+// one normal type and one tuple
+// concat to tuple
 template < typename A , typename ... Bs >
 struct tuple_merge<A,std::tuple<Bs...>>
 {
@@ -72,16 +93,8 @@ struct tuple_merge<A,std::tuple<Bs...>>
   }
 };
 
-template < typename ... As >
-struct tuple_merge<std::tuple<As...>,unused_t>
-{
-  using type = std::tuple<As...>;
-
-  static type merge( std::tuple<As...> a , unused_t )
-  {
-    return a;
-  }
-};
+// one normal type and one tuple
+// concat to tuple
 template < typename ... As , typename B >
 struct tuple_merge<std::tuple<As...>,B>
 {
@@ -94,6 +107,10 @@ struct tuple_merge<std::tuple<As...>,B>
     );
   }
 };
+
+
+// tuple and tuple
+// concat tuples
 template < typename ... As , typename ... Bs >
 struct tuple_merge<std::tuple<As...>,std::tuple<Bs...>>
 {

@@ -7,6 +7,8 @@
 
 namespace eh { namespace parser { namespace rules {
 
+// Attribute specialization for Or Attributes
+// Possible usage of Variant, but not now
 template < typename A , typename B >
 struct or_merge;
 
