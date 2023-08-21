@@ -4,6 +4,7 @@
 
 namespace eh { namespace parser { namespace rules {
 
+// reference wrapper for Parser Object
 template < typename P >
 struct ref_t
   : base_t<ref_t<P>>

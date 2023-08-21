@@ -7,6 +7,7 @@
 
 namespace eh { namespace parser { namespace rules {
 
+// for vector attribute specialization
 template < typename T >
 struct vector_attr;
 
@@ -30,6 +31,8 @@ struct vector_attr
   }
 };
 
+// repeat Parser N times
+// where N \in [min_,max_]
 template < typename P >
 struct repeat_t 
   : base_t<repeat_t<P>>

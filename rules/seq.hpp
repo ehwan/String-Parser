@@ -122,6 +122,7 @@ struct tuple_merge<std::tuple<As...>,std::tuple<Bs...>>
   }
 };
 
+// test Parser A, then Parser B
 template < typename PA , typename PB >
 struct seq_t
   : base_t<seq_t<PA,PB>>

@@ -4,6 +4,7 @@
 
 namespace eh { namespace parser { namespace rules {
 
+// Test with parser, but do not consume iterator
 template < typename P >
 struct notconsume_t
   : base_t<notconsume_t<P>>

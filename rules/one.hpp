@@ -5,6 +5,7 @@
 
 namespace eh { namespace parser { namespace rules {
 
+// test check( ch ) where ch is *begin ( one character )
 template < typename F >
 struct one_t
   : base_t<one_t<F>>

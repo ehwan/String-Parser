@@ -5,20 +5,21 @@
 
 namespace eh { namespace parser { namespace rules {
 
+// test if one character is in range [a,b] *Note* b is in-range
 template < typename T >
 struct range_t
   : base_t<range_t<T>>
 {
-  T a , b;
-  range_t( T a_ , T b_ )
-    : a(std::move(a_)) , b(std::move(b_))
+  T min_ , max_;
+  range_t( T min__ , T max__ )
+    : min_(std::move(min__)) , max_(std::move(max__))
   {
   }
   template < typename I >
   optional<typename std::iterator_traits<I>::value_type>
   parse( I& begin , I end ) const
   {
-    if( begin != end && a <= *begin && *begin <= b )
+    if( begin != end && min_ <= *begin && *begin <= max_ )
     {
       return {true , *begin++};
     }
@@ -38,9 +39,9 @@ struct attribute< rules::range_t<T> , I >
   using type = typename std::iterator_traits<I>::value_type;
 };
 template < typename T >
-rules::range_t<T> range( T a , T b )
+rules::range_t<T> range( T min_ , T max_ )
 {
-  return { a , b };
+  return { min_ , max_ };
 }
 
 }}

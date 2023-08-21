@@ -15,10 +15,14 @@
 
 namespace eh { namespace parser { namespace rules {
 
+// contains multiple 'words'
+// test if input contains on of 'words'
+// longest matching string using trie
 template < typename Attr , typename CharType >
 struct dictionary_t
   : base_t<dictionary_t<Attr,CharType>>
 {
+  // Trie
   struct node_t
   {
     bool hasattr;

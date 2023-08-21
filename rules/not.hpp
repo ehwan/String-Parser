@@ -4,6 +4,8 @@
 
 namespace eh { namespace parser { namespace rules {
 
+// must match Parser A, but not Parser B at the same point begin
+// iterator will be consumed by Parser A
 template < typename PA , typename PB >
 struct not_t
   : base_t<not_t<PA,PB>>

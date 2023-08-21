@@ -35,6 +35,7 @@ template < typename P >
 struct ref_t;
 
 
+// base CRTP Parser Object class
 template < typename CRTP >
 struct base_t
 {

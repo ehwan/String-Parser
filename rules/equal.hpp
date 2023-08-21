@@ -9,6 +9,7 @@
 
 namespace eh { namespace parser { namespace rules {
 
+// match one string
 template < typename Container >
 struct equal_t 
   : base_t<equal_t<Container>>

@@ -4,6 +4,7 @@
 
 namespace eh { namespace parser { namespace rules {
 
+// always return 'd' as parse result
 struct always_t
   : base_t<always_t>
 {

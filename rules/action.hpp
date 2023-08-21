@@ -147,6 +147,8 @@ struct action_invoke<F,std::tuple<Ts...>>
   }
 };
 
+// Action Wrapper
+// if Parse test success, Functor() will be called
 template < typename P , typename F >
 struct action_t
   : base_t<action_t<P,F>>

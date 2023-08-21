@@ -4,6 +4,7 @@
 
 namespace eh { namespace parser { namespace rules {
 
+// make attribute unused_t
 template < typename P >
 struct attrunused_t
   : base_t<attrunused_t<P>>

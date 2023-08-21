@@ -5,6 +5,7 @@
 
 namespace eh { namespace parser { namespace rules {
 
+// return matched iterator range as tuple< begin, end >
 template < typename P >
 struct itpair_t
   : base_t<itpair_t<P>>

@@ -75,11 +75,12 @@ struct or_merge<A,A>
   }
 };
 
+// test if A success first,
+// then test B ( if A failed )
 template < typename A , typename B >
 struct or_t
   : base_t<or_t<A,B>>
 {
-  int cached = -1;
   A a;
   B b;
 

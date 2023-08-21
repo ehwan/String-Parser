@@ -7,6 +7,7 @@
 
 namespace eh { namespace parser { namespace rules {
 
+// find one character in set
 template < typename CharType >
 struct find_t
   : base_t<find_t<CharType>>
