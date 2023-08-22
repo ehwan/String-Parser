@@ -5,6 +5,8 @@
 namespace eh { namespace parser { namespace rules {
 
 // always return 'd' as parse result
+// 'always-true-parser' can be used with 'or_' 
+// to make 'optional' parser ( '?' for REGEX )
 struct always_t
   : base_t<always_t>
 {

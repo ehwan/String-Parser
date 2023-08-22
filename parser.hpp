@@ -10,13 +10,13 @@
 #include "rules/itpair.hpp"
 #include "rules/or.hpp"
 #include "rules/repeat.hpp"
-#include "rules/equal.hpp"
+#include "rules/stringmatch.hpp"
 #include "rules/ref.hpp"
 #include "rules/unused.hpp"
 #include "rules/always.hpp"
 #include "rules/not.hpp"
 #include "rules/notconsume.hpp"
-#include "rules/find.hpp"
+#include "rules/characterset.hpp"
 #include "rules/dictionary.hpp"
 
 #include "token.hpp"
@@ -34,23 +34,23 @@
  *    advance( i , n )
  */
 
-namespace eh { namespace parser { namespace suffix {
+namespace eh { namespace parser { namespace literals {
   inline auto operator"" _p( char x )
   {
     return one( x );
   }
-  inline rules::equal_t<std::string> operator"" _p( char const *str , size_t l )
+  inline rules::string_match_t<char> operator"" _p( char const *str , size_t l )
   {
-    return { std::string(str,l) };
+    return string_match( str, str+l );
   }
-  inline rules::find_t<char> operator"" _pone( char const *str , size_t l )
+  inline rules::character_set_t<char> operator"" _pone( char const *str , size_t l )
   {
-    std::set<char> set{ str , str + l };
-    return { std::move(set) };
+    return set_( str, str+l );
   }
 }}}
 
-using namespace eh::parser::suffix;
+// using suffix literals
+// using namespace eh::parser::literals;
 
 namespace eh { namespace parser {
 

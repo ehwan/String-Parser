@@ -9,13 +9,13 @@ namespace eh { namespace parser { namespace rules {
 
 // find one character in set
 template < typename CharType >
-struct find_t
-  : base_t<find_t<CharType>>
+struct character_set_t
+  : base_t<character_set_t<CharType>>
 {
   std::set<CharType> set_;
 
-  find_t( std::set<CharType> s )
-    : set_( std::move(s) )
+  character_set_t( std::set<CharType> const& s )
+    : set_(s)
   {
   }
 
@@ -36,16 +36,23 @@ struct find_t
 namespace eh { namespace parser {
 
 template < typename C , typename I >
-struct attribute< rules::find_t<C> , I >
+struct attribute< rules::character_set_t<C> , I >
 {
   using type = typename std::iterator_traits<I>::value_type;
 };
 
 template < typename CharType >
-rules::find_t<CharType> find( std::set<CharType> set )
+rules::character_set_t<CharType> set_( std::set<CharType> const& set )
 {
-  return { std::move(set) };
+  return { set };
 }
+template < typename I >
+rules::character_set_t< typename std::iterator_traits<I>::value_type >
+set_( I begin, I end )
+{
+  return set_( std::set< typename std::iterator_traits<I>::value_type >(begin, end) );
+}
+
 
 
 }}

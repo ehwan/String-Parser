@@ -11,6 +11,9 @@
 
 #include <map>
 #include <iterator>
+#include <vector>
+#include <string>
+#include <cstring>
 #include "../base.hpp"
 
 namespace eh { namespace parser { namespace rules {
@@ -55,21 +58,29 @@ struct dictionary_t
 
   node_t root;
 
-  /*
-   * be careful when adding ""(char[]) strings to container
-   * term zero '\0' will be also added to parser
-   */
-  template < typename Container >
-  void add( Container const& c , Attr attr )
+  template < typename I >
+  void add( I begin, I end, Attr const& attr )
   {
-    auto end = std::end(c);
     node_t *node = &root;
-    for( auto i=std::begin(c); i!=end; ++i )
+    for( auto i=begin; i!=end; ++i )
     {
       node = &node->map[*i];
     }
     node->set_attr( std::move(attr) );
   }
+  void add( std::vector<CharType> const& str, Attr const& attr )
+  {
+    add( str.begin(), str.end(), attr );
+  }
+  void add( std::basic_string<CharType> const& str, Attr const& attr )
+  {
+    add( str.begin(), str.end(), attr );
+  }
+  void add( CharType const* c_str, Attr const& attr )
+  {
+    add( c_str, c_str+std::strlen(c_str), attr );
+  }
+
   template < typename I >
   optional<Attr>
   parse( I &begin , I end ) const

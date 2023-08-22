@@ -147,6 +147,7 @@ void variable_name_parse()
 }
 void dictionary()
 {
+  // dictionary will return the longest-matched-string's attribute
   eh::parser::dictionary<int,char> dict;
   dict.add( std::string("hello") , 0 );
   dict.add( std::string("hell") , 2 );
@@ -170,10 +171,19 @@ void comment_parser()
   // commenting out
   auto printstring = []( std::string &str ){ std::cout << str << '\n'; };
 
+  // using string literals
+  using namespace ep::literals;
+
+
+  // _p for complete-matching
   // C-Style comment
   auto comment_c = 
+    // between "/*" and "*/"
     ("/*"_p).unused() >>
+
+    // any character but "*/"
     (*( eh::parser::any - "*/"_p )) >>
+
     ("*/"_p).unused()
     ;
 
