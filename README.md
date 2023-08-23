@@ -4,10 +4,14 @@ Header only template-based string parser and pattern matcher.
 fully supported with clang / c++14
 
 ## Overview
+
+Note that in all examples,
+```cpp
+namespace ep = eh::parser;
+```
+
 ```cpp
 // @FileName : examples/calculator.cpp
-
-namespace ep = eh::parser;
 
 int main()
 {
@@ -249,3 +253,38 @@ Table: Functor and its argument
 Table: functor's returned value and its Attribute
 
 There are more special Parser Wrapper for advaced Parser creation.
+
+### Virtual Parser
+Since every Parser Object's implementation is based on template idoms, eg. CRTP or SFINAE,
+it can get benefit from compiler's smart optimization.
+But, because Parser Objects are being deep-copied and must be defined prior to its actual invoking,
+we can't make cyclic, or recursive patterns.
+
+`ep::rule<Attribute,Iterator>` is virtual class based Parser Object that can be assigned as any parser objects.
+
+```cpp
+auto compile_time_pattern1 = ep::range('a', 'z');
+auto compile_time_pattern2 = ep::range('0', '9');
+
+ep::rule<int,std::string::iterator> virtual_pattern, virtual_reference_pattern;
+std::string str = "123123 abcabc";
+auto begin = str.begin();
+
+// this takes the reference of 'virtual_pattern'
+virtual_reference_pattern = ep::ref( virtual_pattern );
+
+// assign as small-alphabet parser
+virtual_pattern = compile_time_pattern1;
+// 'virtual_reference_pattern' will be assigned too
+
+
+// match fail
+virtual_pattern.parse( begin, str.end() );
+
+// assign as digit parser
+virtual_pattern = compile_time_pattern2;
+
+// match success
+virtual_pattern.parse( begin, str.end() );
+virtual_reference_pattern.parse( begin, str.end() );
+```

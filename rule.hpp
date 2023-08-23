@@ -7,15 +7,15 @@
 namespace eh { namespace parser {
 
 // virtual class version of template PARSER
-template < typename Ret , typename Iterator >
+template < typename Attribute, typename Iterator >
 class rule
-  : public rules::base_t<rule<Ret,Iterator>>
+  : public rules::base_t<rule<Attribute,Iterator>>
 {
   struct base_t
   {
     virtual ~base_t(){}
     virtual base_t* clone() const = 0;
-    virtual optional<Ret> parse( Iterator &begin , Iterator end ) const = 0;
+    virtual optional<Attribute> parse( Iterator &begin , Iterator end ) const = 0;
   };
 
   template < typename P >
@@ -36,7 +36,7 @@ class rule
     {
       return new this_type(p);
     }
-    optional<Ret> parse( Iterator &begin , Iterator end ) const
+    optional<Attribute> parse( Iterator &begin , Iterator end ) const
     {
       return p.parse( begin , end );
     }
@@ -79,7 +79,7 @@ public:
     return *this;
   }
 
-  optional<Ret>
+  optional<Attribute>
   parse( Iterator &begin , Iterator end ) const
   {
     return parser_->parse( begin , end );
