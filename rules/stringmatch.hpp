@@ -11,27 +11,30 @@
 namespace eh { namespace parser { namespace rules {
 
 // match one string
-template < typename CharType >
+// Container sould have member method string_.begin(), string_.end()
+template < typename Container >
 struct string_match_t
-  : base_t<string_match_t<CharType>>
+  : base_t<string_match_t<Container>>
 {
-  std::vector<CharType> string_;
+  Container string_;
 
-  string_match_t( std::vector<CharType> const& string__ )
-    : string_(string__)
+  string_match_t( Container string__ )
+    : string_(std::move(string__))
   {
   }
   template < typename I >
   optional<unused_t> parse( I& begin , I end ) const
   {
-    if( std::distance(begin,end) < string_.size() ){ return {false}; }
-
-    bool ret = std::equal(string_.begin(), string_.end(), begin );
-    if( ret )
+    I begin0 = begin;
+    for( auto i=string_.begin(); i!=string_.end(); ++i )
     {
-      std::advance( begin , string_.size() );
+      if( begin == end || *begin != *i )
+      {
+        begin = begin0;
+        return {false};
+      }
     }
-    return {ret};
+    return {true};
   }
 };
 
@@ -40,21 +43,30 @@ struct string_match_t
 namespace eh { namespace parser {
 
 template < typename CharType >
-rules::string_match_t<CharType> string_match( std::vector<CharType> const& string_ )
+rules::string_match_t<std::vector<CharType>> string_match( std::vector<CharType> const& string_ )
+{
+  return {string_};
+}
+template < typename CharType >
+rules::string_match_t<std::basic_string<CharType>> string_match( std::basic_string<CharType> const& string_ )
 {
   return {string_};
 }
 template < typename I >
-rules::string_match_t<typename std::iterator_traits<I>::value_type>
+auto
 string_match( I begin, I end )
 {
   return string_match( std::vector< typename std::iterator_traits<I>::value_type >( begin, end ) );
 }
 
-inline rules::string_match_t<char> string( char const *str )
+#if __cplusplus >= 201700
+template < typename CharType >
+rules::string_match_t< std::basic_string_view<CharType> >
+string_match( std::basic_string_view<CharType> string_view )
 {
-  return string_match( str, str+std::strlen(str) );
+  return {string_view};
 }
+#endif
 
 
 }}

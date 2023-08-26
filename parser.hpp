@@ -29,9 +29,6 @@
  *    i2 = i
  *    i != end
  *    i == end
- *    distance( i , i2 )
- *    equal( i , i2 , b )
- *    advance( i , n )
  */
 
 namespace eh { namespace parser { namespace literals {
@@ -39,10 +36,20 @@ namespace eh { namespace parser { namespace literals {
   {
     return one( x );
   }
-  inline rules::string_match_t<char> operator"" _p( char const *str , size_t l )
+  #if __cplusplus < 201500
+  inline auto
+  operator "" _p( char const *str, size_t l )
   {
-    return string_match( str, str+l );
+    return string_match( std::string(str,l) );
   }
+  #else
+  // string_view is available at c++17
+  inline auto
+  operator "" _p( char const *str, size_t l )
+  {
+    return string_match( std::string_view(str,l) );
+  }
+  #endif
   inline rules::character_set_t<char> operator"" _pone( char const *str , size_t l )
   {
     return set_( str, str+l );
