@@ -60,33 +60,33 @@ struct base_t
   repeat_t<CRTP> operator+ () const;
 
   // operator for action( this, f )
-  template < typename F >
+  template < typename Functor >
   decltype(auto)
-  operator[] ( F &&f ) const;
+  operator[] ( Functor &&functor ) const;
 
-  // operator for or_( this, p )
-  template < typename P >
+  // operator for or_( *this, parser )
+  template < typename Parser >
   decltype(auto)
-  operator| ( P p ) const;
+  operator| ( Parser parser ) const;
 
-  // operator for seq( this, p )
-  template < typename P >
+  // operator for seq( *this, p )
+  template < typename Parser >
   decltype(auto)
-  operator>> ( P p ) const;
+  operator>> ( Parser parser ) const;
 
-  // operator for not_( this, p )
-  template < typename P >
+  // operator for not_( *this, p )
+  template < typename Parser >
   decltype(auto)
-  operator- ( P p ) const;
+  operator- ( Parser parser ) const;
 
   // same as attr()
-  // make its attrubute as x
-  template < typename T >
-  decltype(auto) operator()( T x ) const;
+  // make its attrubute as new_attr
+  template < typename NewAttr >
+  decltype(auto) operator()( NewAttr new_attr ) const;
 
   // make its attribute as x
-  template < typename T >
-  decltype(auto) attr( T x ) const;
+  template < typename NewAttr >
+  decltype(auto) attr( NewAttr new_attr ) const;
 
   // same as unused()
   // make its attribute as unused_t

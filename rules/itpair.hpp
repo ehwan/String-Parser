@@ -6,25 +6,25 @@
 namespace eh { namespace parser { namespace rules {
 
 // return matched iterator range as tuple< begin, end >
-template < typename P >
+template < typename Parser >
 struct itpair_t
-  : base_t<itpair_t<P>>
+  : base_t<itpair_t<Parser>>
 {
-  P p;
+  Parser parser;
 
-  itpair_t( P p_ )
-    : p(std::move(p_))
+  itpair_t( Parser parser_ )
+    : parser(std::move(parser_))
   {
   }
 
-  template < typename I >
-  optional< std::tuple<I,I> >
-  parse( I &begin , I end ) const
+  template < typename Iterator >
+  optional< std::tuple<Iterator,Iterator> >
+  parse( Iterator &begin , Iterator end ) const
   {
-    I begin_ = begin;
-    if( p.parse(begin,end) )
+    Iterator begin_ = begin;
+    if( parser.parse(begin,end) )
     {
-      return { true , std::tuple<I,I>(begin_,begin) };
+      return { true , std::tuple<Iterator,Iterator>(begin_,begin) };
     }
     return { false };
   }
@@ -40,11 +40,11 @@ struct attribute<rules::itpair_t<P>,I>
   using type = std::tuple<I,I>;
 };
 
-template < typename P >
-rules::itpair_t<P>
-itpair( P p )
+template < typename Parser >
+rules::itpair_t<Parser>
+itpair( Parser parser )
 {
-  return { p };
+  return { parser };
 }
 
 }}

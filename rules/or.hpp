@@ -77,34 +77,34 @@ struct or_merge<A,A>
 
 // test if A success first,
 // then test B ( if A failed )
-template < typename A , typename B >
+template < typename ParserA , typename ParserB >
 struct or_t
-  : base_t<or_t<A,B>>
+  : base_t<or_t<ParserA,ParserB>>
 {
-  A a;
-  B b;
+  ParserA parsera;
+  ParserB parserb;
 
-  or_t( A a_ , B b_ )
-    : a(std::move(a_)) , b(std::move(b_))
+  or_t( ParserA parsera_ , ParserB parserb_ )
+    : parsera(std::move(parsera_)) , parserb(std::move(parserb_))
   {
   }
 
-  template < typename I >
+  template < typename Iterator >
   optional< typename or_merge<
-    typename attribute<A,I>::type , typename attribute<B,I>::type
+    typename attribute<ParserA,Iterator>::type , typename attribute<ParserB,Iterator>::type
   >::type >
-  parse( I &begin , I end ) const
+  parse( Iterator &begin , Iterator end ) const
   {
-    if( auto r1 = a.parse(begin,end) )
+    if( auto r1 = parsera.parse(begin,end) )
     {
       return { true , or_merge<
-        typename attribute<A,I>::type , typename attribute<B,I>::type
+        typename attribute<ParserA,Iterator>::type , typename attribute<ParserB,Iterator>::type
       >::merge( std::move(r1.get()) ) };
     }
-    if( auto r2 = b.parse(begin,end) )
+    if( auto r2 = parserb.parse(begin,end) )
     {
       return { true , or_merge<
-        typename attribute<A,I>::type , typename attribute<B,I>::type
+        typename attribute<ParserA,Iterator>::type , typename attribute<ParserB,Iterator>::type
       >::merge( std::move(r2.get()) ) };
     }
     return {false};
@@ -123,16 +123,16 @@ struct attribute< rules::or_t<A,B> , I >
   >::type;
 };
 
-template < typename A , typename B >
-rules::or_t<A,B> or_( A a , B b )
+template < typename ParserA , typename ParserB >
+rules::or_t<ParserA,ParserB> or_( ParserA parser_a , ParserB parser_b )
 {
-  return { a , b };
+  return { parser_a , parser_b };
 }
-template < typename A , typename B , typename C , typename ... Ps >
-auto or_( A a , B b , C c , Ps ... ps )
+template < typename ParserA , typename ParserB , typename ParserC , typename ... Parsers >
+auto or_( ParserA parser_a , ParserB parser_b , ParserC parser_c , Parsers ... parsers )
 {
-  return or_( a ,
-      or_( b , c , ps... )
+  return or_( parser_a ,
+      or_( parser_b , parser_c , parsers... )
   );
 }
 

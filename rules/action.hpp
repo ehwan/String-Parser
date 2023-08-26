@@ -172,28 +172,28 @@ struct action_invoke<F,std::tuple<Ts...>>
 
 // Action Wrapper
 // if Parse test success, Functor() will be called
-template < typename P , typename F >
+template < typename Parser , typename Functor >
 struct action_t
-  : base_t<action_t<P,F>>
+  : base_t<action_t<Parser,Functor>>
 {
-  P p;
-  F f;
+  Parser parser;
+  Functor functor;
 
-  action_t( P p_ , F f_ )
-    : p(std::move(p_)) , f(std::move(f_))
+  action_t( Parser parser__ , Functor functor__ )
+    : parser(std::move(parser__)) , functor(std::move(functor__))
   {
   }
 
-  template < typename I >
+  template < typename Iterator >
   optional<
-    typename action_invoke<F,typename attribute<P,I>::type>::type
+    typename action_invoke<Functor,typename attribute<Parser,Iterator>::type>::type
   >
-  parse( I &begin , I end ) const
+  parse( Iterator &begin , Iterator end ) const
   {
-    if( auto ret = p.parse(begin,end) )
+    if( auto ret = parser.parse(begin,end) )
     {
       return { true ,
-        action_invoke<F,typename attribute<P,I>::type>::invoke(f,ret.get()) };
+        action_invoke<Functor,typename attribute<Parser,Iterator>::type>::invoke(functor,ret.get()) };
     }
     return { false };
   }
@@ -211,11 +211,11 @@ struct attribute<rules::action_t<P,F>,I>
   >::type;
 };
 
-template < typename P , typename F >
-rules::action_t<P,typename std::decay<F>::type>
-action( P p , F &&f )
+template < typename Parser , typename Functor >
+rules::action_t<Parser,typename std::decay<Functor>::type>
+action( Parser parser , Functor &&functor )
 {
-  return { p , static_cast<F&&>(f) };
+  return { parser , static_cast<Functor&&>(functor) };
 }
 
 

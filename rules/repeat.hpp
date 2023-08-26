@@ -33,32 +33,32 @@ struct vector_attr
 
 // repeat Parser N times
 // where N \in [min_,max_]
-template < typename P >
+template < typename Parser >
 struct repeat_t 
-  : base_t<repeat_t<P>>
+  : base_t<repeat_t<Parser>>
 {
-  P p;
+  Parser parser;
   unsigned int min_;
   unsigned int max_;
 
-  repeat_t( P p_ , unsigned int mi_ , unsigned int ma_ )
-    : p(std::move(p_)) ,
-      min_(mi_) , max_(ma_)
+  repeat_t( Parser parser_ , unsigned int min__ , unsigned int max__ )
+    : parser(std::move(parser_)) ,
+      min_(min__) , max_(max__)
   {
   }
 
-  template < typename I >
+  template < typename Iterator >
   optional<
-    typename vector_attr< typename attribute<P,I>::type >::type
+    typename vector_attr< typename attribute<Parser,Iterator>::type >::type
   >
-  parse( I &begin , I end ) const
+  parse( Iterator &begin , Iterator end ) const
   {
-    vector_attr< typename attribute<P,I>::type > vec;
+    vector_attr< typename attribute<Parser,Iterator>::type > vec;
     unsigned int i = 0;
-    I begin_ = begin;
+    Iterator begin_ = begin;
     while( i < max_ )
     {
-      auto r = p.parse(begin,end);
+      auto r = parser.parse(begin,end);
       if( r.is_valid() == false )
       {
         break;
@@ -89,17 +89,17 @@ struct attribute<rules::repeat_t<P>,I>
   >::type;
 };
 
-template < typename P >
-rules::repeat_t<P>
-repeat( P p , unsigned int min_ , unsigned int max_ )
+template < typename Parser >
+rules::repeat_t<Parser>
+repeat( Parser parser , unsigned int min_ , unsigned int max_ )
 {
-  return { p , min_ , max_ };
+  return { parser , min_ , max_ };
 }
-template < typename P >
-rules::repeat_t<P>
-repeat( P p , unsigned int x )
+template < typename Parser >
+rules::repeat_t<Parser>
+repeat( Parser parser , unsigned int count )
 {
-  return { p , x , x };
+  return { parser , count , count };
 }
 
 }}

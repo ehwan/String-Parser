@@ -10,16 +10,17 @@ namespace eh { namespace parser { namespace rules {
 struct always_t
   : base_t<always_t>
 {
-  bool d;
-  always_t( bool x )
-    : d(x)
+  bool parse_result;
+
+  always_t( bool parse_result_ )
+    : parse_result(parse_result_)
   {
   }
-  template < typename I >
+  template < typename Iterator >
   optional<unused_t>
-  parse( I& begin , I end ) const
+  parse( Iterator& begin , Iterator end ) const
   {
-    return {d};
+    return {parse_result};
   }
 };
 
@@ -33,9 +34,9 @@ struct attribute< rules::always_t , I >
   using type = unused_t;
 };
 using always_t = rules::always_t;
-inline rules::always_t always( bool x )
+inline rules::always_t always( bool parse_result )
 {
-  return { x };
+  return { parse_result };
 }
 
 }}

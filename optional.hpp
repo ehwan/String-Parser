@@ -4,29 +4,33 @@
 
 namespace eh { namespace parser {
 
-template < typename T >
+// return type of parse() function
+template < typename Attribute >
 struct optional
 {
-  using type = T;
-  bool b;
-  T data;
+  using type = Attribute;
 
-  optional( bool b_ , T d )
-    : b(b_), data(static_cast<T&&>(d))
-  {
-  }
-  optional( bool b_ )
-    : b(b_)
+  bool parse_result;
+  Attribute data;
+
+  optional( bool parse_result_ , Attribute data_ )
+    : parse_result( parse_result_ ), data( static_cast<Attribute&&>(data_) )
   {
   }
 
-  operator bool() const { return b; }
-  bool is_valid() const{ return b; }
-  T& get()
+  // default construct Attribute
+  optional( bool parse_result_ )
+    : parse_result(parse_result_)
+  {
+  }
+
+  operator bool() const { return parse_result; }
+  bool is_valid() const{ return parse_result; }
+  Attribute& get()
   {
     return data;
   }
-  T const& get() const
+  Attribute const& get() const
   {
     return data;
   }
@@ -35,18 +39,19 @@ template <>
 struct optional<unused_t>
 {
   using type = unused_t;
-  bool b;
 
-  optional( bool b_ , unused_t )
-    : b(b_)
+  bool parse_result;
+
+  optional( bool parse_result_ , unused_t )
+    : parse_result(parse_result_)
   {
   }
-  optional( bool b_ )
-    : b(b_)
+  optional( bool parse_result_ )
+    : parse_result(parse_result_)
   {
   }
-  operator bool() const{ return b; }
-  bool is_valid() const{ return b; }
+  operator bool() const{ return parse_result; }
+  bool is_valid() const{ return parse_result; }
   unused_t get() const
   {
     return {};

@@ -123,34 +123,34 @@ struct tuple_merge<std::tuple<As...>,std::tuple<Bs...>>
 };
 
 // test Parser A, then Parser B
-template < typename PA , typename PB >
+template < typename ParserA , typename ParserB >
 struct seq_t
-  : base_t<seq_t<PA,PB>>
+  : base_t<seq_t<ParserA,ParserB>>
 {
-  PA pa;
-  PB pb;
+  ParserA parsera;
+  ParserB parserb;
 
-  seq_t( PA a , PB b )
-    : pa(std::move(a)) , pb(std::move(b))
+  seq_t( ParserA parsera_ , ParserB parserb_ )
+    : parsera(std::move(parsera_)) , parserb(std::move(parserb_))
   {
   }
 
-  template < typename I , typename PA_ = PA , typename PB_ = PB >
+  template < typename Iterator , typename PA_ = ParserA , typename PB_ = ParserB >
   optional<
     typename tuple_merge<
-      typename attribute<PA_,I>::type , typename attribute<PB_,I>::type
+      typename attribute<PA_,Iterator>::type , typename attribute<PB_,Iterator>::type
     >::type
   >
-  parse( I &begin , I end ) const
+  parse( Iterator &begin , Iterator end ) const
   {
-    I begin_ = begin;
-    if( auto r1 = pa.parse(begin,end) )
+    Iterator begin_ = begin;
+    if( auto r1 = parsera.parse(begin,end) )
     {
-      if( auto r2 = pb.parse(begin,end) )
+      if( auto r2 = parserb.parse(begin,end) )
       {
         return { true ,
           tuple_merge<
-          typename attribute<PA_,I>::type , typename attribute<PB_,I>::type
+          typename attribute<PA_,Iterator>::type , typename attribute<PB_,Iterator>::type
         >::merge( std::move(r1.get()) , std::move(r2.get()) )
         };
       }
@@ -173,17 +173,17 @@ struct attribute<rules::seq_t<PA,PB>,I>
   >::type;
 };
 
-template < typename PA , typename PB >
-rules::seq_t<PA,PB>
-seq( PA pa , PB pb )
+template < typename ParserA , typename ParserB >
+rules::seq_t<ParserA,ParserB>
+seq( ParserA parser_a , ParserB parser_b )
 {
-  return { pa , pb };
+  return { parser_a , parser_b };
 }
-template < typename PA , typename PB , typename PC , typename ... Ps >
-auto seq( PA pa , PB pb , PC pc , Ps ... ps )
+template < typename ParserA , typename ParserB , typename ParserC , typename ... Parsers >
+auto seq( ParserA parser_a , ParserB parser_b , ParserC parser_c , Parsers ... parsers )
 {
-  return seq( pa ,
-      seq( pb , pc , ps... )
+  return seq( parser_a ,
+      seq( parser_b , parser_c , parsers... )
   );
 }
 
