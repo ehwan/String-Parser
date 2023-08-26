@@ -31,6 +31,10 @@ int main()
       }
     );
 
+  // make action() using [] operator
+  auto digit_parser2 =
+    ep::range('0', '9')[ digit_parser.functor ];
+
   // REGEX : [0-9]+
   auto integer_parser =
     ep::action(
@@ -65,6 +69,16 @@ int main()
         0, 10000000
       )
     );
+
+  // or using literals and operator
+  using namespace ep::literals;
+  auto plus_minus_expression_noaction2 =
+    integer_parser
+    >>
+    *(
+       ('-'_p | '+'_p) >> integer_parser
+    );
+
   auto plus_minus_expression =
     ep::action(
       plus_minus_expression_noaction,
