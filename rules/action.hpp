@@ -127,7 +127,8 @@ struct action_invoke<F,std::tuple<Ts...>>
   using result_type =
     typename std::decay<typename std::result_of<F(Ts&...)>::type>::type;
 #else
-  typename std::decay< typename std::invoke_result<F,Ts&...>::type >::type;
+  using result_type =
+    typename std::decay< typename std::invoke_result<F,Ts&...>::type >::type;
 #endif
   
   template < typename Result >
