@@ -20,9 +20,17 @@ template < typename F >
 struct action_invoke<F,unused_t>
 {
   // action does not take any arguments
+
+  // 'result_of' will be deprecated in c++17
+#if __cplusplus < 201500
   using result_type =
     typename std::decay<typename std::result_of<F()>::type>::type;
+#else
+  using result_type =
+    typename std::decay< typename std::invoke_result<F>::type >::type;
+#endif
 
+  // template specialized helper class for ( void or T ) returned type
   template < typename Result >
   struct shell;
 
@@ -62,9 +70,18 @@ template < typename F , typename T >
 struct action_invoke
 {
   // F( t ), action takes only one data as argument
+
+  // 'result_of' will be deprecated in c++17
+#if __cplusplus < 201500
   using result_type =
     typename std::decay<typename std::result_of<F(T&)>::type>::type;
+#else
+  using result_type =
+    typename std::decay< typename std::invoke_result<F,T&>::type >::type;
+#endif
+
   
+  // template specialized helper class for ( void or T ) returned type
   template < typename Result >
   struct shell;
 
@@ -105,8 +122,13 @@ struct action_invoke<F,std::tuple<Ts...>>
 {
   using tuple_type = std::tuple<Ts...>;
   // F( Ts... ), action takes unpacked tuple as arguments
+
+#if __cplusplus < 201500
   using result_type =
     typename std::decay<typename std::result_of<F(Ts&...)>::type>::type;
+#else
+  typename std::decay< typename std::invoke_result<F,Ts&...>::type >::type;
+#endif
   
   template < typename Result >
   struct shell;
