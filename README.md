@@ -7,6 +7,7 @@ fully supported with clang / c++14
 
 Note that in all examples,
 ```cpp
+#include <parser.hpp>
 namespace ep = eh::parser;
 ```
 
