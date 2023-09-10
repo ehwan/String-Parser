@@ -15,7 +15,7 @@ struct attrunused_t
   {
   }
   template < typename I >
-  optional<unused_t> parse( I& begin , I end ) const
+  parse_result_t<unused_t> parse( I& begin , I end ) const
   {
     return { p.parse(begin,end).is_valid() };
   }

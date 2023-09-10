@@ -90,7 +90,7 @@ struct or_t
   }
 
   template < typename Iterator >
-  optional< typename or_merge<
+  parse_result_t< typename or_merge<
     typename attribute<ParserA,Iterator>::type , typename attribute<ParserB,Iterator>::type
   >::type >
   parse( Iterator &begin , Iterator end ) const

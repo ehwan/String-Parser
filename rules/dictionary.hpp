@@ -82,7 +82,7 @@ struct dictionary_t
   }
 
   template < typename I >
-  optional<Attr>
+  parse_result_t<Attr>
   parse( I &begin , I end ) const
   {
     I begin_ = begin;

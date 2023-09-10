@@ -16,7 +16,7 @@ struct range_t
   {
   }
   template < typename I >
-  optional<typename std::iterator_traits<I>::value_type>
+  parse_result_t<typename std::iterator_traits<I>::value_type>
   parse( I& begin , I end ) const
   {
     if( begin != end && min_ <= *begin && *begin <= max_ )

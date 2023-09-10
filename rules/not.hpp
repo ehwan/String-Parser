@@ -20,7 +20,7 @@ struct not_t
   }
 
   template < typename I >
-  optional< typename attribute<PA,I>::type >
+  parse_result_t< typename attribute<PA,I>::type >
   parse( I& begin , I end ) const
   {
     I begin_ = begin;

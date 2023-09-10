@@ -48,7 +48,7 @@ struct repeat_t
   }
 
   template < typename Iterator >
-  optional<
+  parse_result_t<
     typename vector_attr< typename attribute<Parser,Iterator>::type >::type
   >
   parse( Iterator &begin , Iterator end ) const

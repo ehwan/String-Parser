@@ -136,7 +136,7 @@ struct seq_t
   }
 
   template < typename Iterator , typename PA_ = ParserA , typename PB_ = ParserB >
-  optional<
+  parse_result_t<
     typename tuple_merge<
       typename attribute<PA_,Iterator>::type , typename attribute<PB_,Iterator>::type
     >::type

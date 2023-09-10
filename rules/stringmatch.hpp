@@ -23,7 +23,7 @@ struct string_match_t
   {
   }
   template < typename I >
-  optional<unused_t> parse( I& begin , I end ) const
+  parse_result_t<unused_t> parse( I& begin , I end ) const
   {
     I begin0 = begin;
     for( auto i=string_.begin(); i!=string_.end(); ++i )

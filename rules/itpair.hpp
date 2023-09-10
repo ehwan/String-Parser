@@ -18,7 +18,7 @@ struct itpair_t
   }
 
   template < typename Iterator >
-  optional< std::tuple<Iterator,Iterator> >
+  parse_result_t< std::tuple<Iterator,Iterator> >
   parse( Iterator &begin , Iterator end ) const
   {
     Iterator begin_ = begin;

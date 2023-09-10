@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../base.hpp"
+#include <memory>
 
 namespace eh { namespace parser { namespace rules {
 

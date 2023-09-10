@@ -39,7 +39,7 @@ int main()
   one_big_alphabet.parse( begin, my_string.end() );
 
   /*
-  parse() function returns an optional<Attr> value
+  parse() function returns an parse_result_t<Attr> value
   which contains the result of pattern matching
   and the parsed data from input stream.
 
@@ -132,7 +132,7 @@ void variable_name_parse()
   std::string str = "foo123 var456";
   auto begin = str.begin();
 
-  // return optional<AttributeType>
+  // return parse_result_t<AttributeType>
   auto ret = variable_parser.parse( begin, str.end() );
   // begin points where parsing ends
   std::string parsed_name( str.begin(), begin );
@@ -207,7 +207,7 @@ void comment_parser()
     "multi line\n";
   auto b = str.begin();
 
-  // return optional< vector<char> >
+  // return parse_result_t< vector<char> >
   auto ret = comment_out.parse( b , str.end() );
   for( auto i : ret.get() )
   {

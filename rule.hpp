@@ -15,7 +15,7 @@ class rule
   {
     virtual ~base_t(){}
     virtual base_t* clone() const = 0;
-    virtual optional<Attribute> parse( Iterator &begin , Iterator end ) const = 0;
+    virtual parse_result_t<Attribute> parse( Iterator &begin , Iterator end ) const = 0;
   };
 
   template < typename P >
@@ -36,7 +36,7 @@ class rule
     {
       return new this_type(p);
     }
-    optional<Attribute> parse( Iterator &begin , Iterator end ) const
+    parse_result_t<Attribute> parse( Iterator &begin , Iterator end ) const
     {
       return p.parse( begin , end );
     }
@@ -79,7 +79,7 @@ public:
     return *this;
   }
 
-  optional<Attribute>
+  parse_result_t<Attribute>
   parse( Iterator &begin , Iterator end ) const
   {
     return parser_->parse( begin , end );

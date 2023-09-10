@@ -17,7 +17,7 @@ struct notconsume_t
   }
 
   template < typename I >
-  optional< typename attribute<P,I>::type >
+  parse_result_t< typename attribute<P,I>::type >
   parse( I& begin , I end ) const
   {
     I begin_ = begin;

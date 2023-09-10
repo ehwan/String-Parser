@@ -17,7 +17,7 @@ struct always_t
   {
   }
   template < typename Iterator >
-  optional<unused_t>
+  parse_result_t<unused_t>
   parse( Iterator& begin , Iterator end ) const
   {
     return {parse_result};

@@ -151,7 +151,7 @@ if the pattern doesn't match, iterator will not move
 
 ### Attribute of Parser Objects
 
-`parse()` function returns an `optional<Attr>` value
+`parse()` function returns an `parse_result_t<Attr>` value
 which contains the result of pattern matching
 and the parsed data from input stream.
 

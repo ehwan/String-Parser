@@ -185,7 +185,7 @@ struct action_t
   }
 
   template < typename Iterator >
-  optional<
+  parse_result_t<
     typename action_invoke<Functor,typename attribute<Parser,Iterator>::type>::type
   >
   parse( Iterator &begin , Iterator end ) const
