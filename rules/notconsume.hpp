@@ -35,6 +35,8 @@ struct attribute< rules::notconsume_t<P> , I >
   using type = typename attribute<P,I>::type;
 };
 
+// make parser does not consume iterator
+// ( 'begin' in parse() function does not move )
 template < typename P >
 rules::notconsume_t<P> notconsume( P p )
 {

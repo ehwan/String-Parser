@@ -156,6 +156,12 @@ rules::base_t<CRTP>::pair() const
   return itpair( unused() );
 }
 template < typename CRTP >
+decltype(auto)
+rules::base_t<CRTP>::view() const
+{
+  return itpair( unused() );
+}
+template < typename CRTP >
 rules::ref_t<CRTP>
 rules::base_t<CRTP>::ref() const
 {

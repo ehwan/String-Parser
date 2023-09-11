@@ -38,6 +38,8 @@ struct attribute< rules::range_t<T> , I >
 {
   using type = typename std::iterator_traits<I>::value_type;
 };
+
+// match one character's value is in range [min_,max_] inclusive
 template < typename T >
 rules::range_t<T> range( T min_ , T max_ )
 {

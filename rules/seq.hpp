@@ -173,12 +173,15 @@ struct attribute<rules::seq_t<PA,PB>,I>
   >::type;
 };
 
+// match parsers in order sequentially
 template < typename ParserA , typename ParserB >
 rules::seq_t<ParserA,ParserB>
 seq( ParserA parser_a , ParserB parser_b )
 {
   return { parser_a , parser_b };
 }
+
+// match parsers in order sequentially
 template < typename ParserA , typename ParserB , typename ParserC , typename ... Parsers >
 auto seq( ParserA parser_a , ParserB parser_b , ParserC parser_c , Parsers ... parsers )
 {

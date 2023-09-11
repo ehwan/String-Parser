@@ -14,9 +14,17 @@ struct character_set_t
 {
   std::set<CharType> set_;
 
+  character_set_t()
+  {
+  }
   character_set_t( std::set<CharType> const& s )
     : set_(s)
   {
+  }
+
+  void add( CharType ch )
+  {
+    set_.insert( ch );
   }
 
   template < typename I >
@@ -41,11 +49,14 @@ struct attribute< rules::character_set_t<C> , I >
   using type = typename std::iterator_traits<I>::value_type;
 };
 
+// find one character in set
 template < typename CharType >
 rules::character_set_t<CharType> set_( std::set<CharType> const& set )
 {
   return { set };
 }
+
+// find one character in set
 template < typename I >
 rules::character_set_t< typename std::iterator_traits<I>::value_type >
 set_( I begin, I end )

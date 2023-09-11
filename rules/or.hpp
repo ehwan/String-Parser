@@ -123,11 +123,16 @@ struct attribute< rules::or_t<A,B> , I >
   >::type;
 };
 
+// test if any of parsers matched
+// test is performed in order ( left to right )
 template < typename ParserA , typename ParserB >
 rules::or_t<ParserA,ParserB> or_( ParserA parser_a , ParserB parser_b )
 {
   return { parser_a , parser_b };
 }
+
+// test if any of parsers matched
+// test is performed in order ( left to right )
 template < typename ParserA , typename ParserB , typename ParserC , typename ... Parsers >
 auto or_( ParserA parser_a , ParserB parser_b , ParserC parser_c , Parsers ... parsers )
 {

@@ -31,6 +31,9 @@ struct attribute< rules::attrunused_t<P> , I >
 {
   using type = unused_t;
 };
+
+
+// make its attribute as unused_t
 template < typename P >
 rules::attrunused_t<P> unused( P p )
 {

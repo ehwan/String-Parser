@@ -3,6 +3,11 @@
 #include <type_traits>
 #include "parse_result.hpp"
 
+#if __cplusplus >= 201500
+#include <string_view>
+#endif
+
+
 namespace eh { namespace parser { namespace rules {
 
 struct always_t;
@@ -92,8 +97,11 @@ struct base_t
   // make its attribute as unused_t
   decltype(auto) operator()() const;
 
-  // Its attribute will be iterator pair (begin,end) parse() consumed
+// Its attribute will be tuple (begin,end) that parse() consumed
   decltype(auto) pair() const;
+
+// Its attribute will be tuple (begin,end) that parse() consumed
+  decltype(auto) view() const;
 
   // return itself as reference
   // same usage as std::ref

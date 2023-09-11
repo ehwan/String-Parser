@@ -34,6 +34,9 @@ struct attribute< rules::ref_t<P> , I >
 {
   using type = typename attribute<P,I>::type;
 };
+
+// return itself as reference
+// same usage as std::ref
 template < typename P >
 rules::ref_t<P> ref_( P const& p )
 {

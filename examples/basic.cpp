@@ -153,11 +153,15 @@ void dictionary()
   dict.add( std::string("hell") , 2 );
   dict.add( std::string("world") , 1 );
   dict.add( std::string("hellowo") , 4 );
+  dict.add( "dictword1", 10 );
+  dict.add( std::string_view("string_view only for c++17"), 10000 );
 
   std::string str = "helloworld";
   auto b = str.begin();
-  auto ret = dict.parse( b , str.end() );
-  if( ret )
+
+  // parse_result< Attribute Type >
+  ep::parse_result_t<int> ret = dict.parse( b , str.end() );
+  if( ret ) // ret.is_valid()
   {
     std::cout << ret.get();
   }else

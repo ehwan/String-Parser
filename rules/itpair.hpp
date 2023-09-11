@@ -40,9 +40,17 @@ struct attribute<rules::itpair_t<P>,I>
   using type = std::tuple<I,I>;
 };
 
+// Its attribute will be tuple (begin,end) that parse() consumed
 template < typename Parser >
 rules::itpair_t<Parser>
 itpair( Parser parser )
+{
+  return { parser };
+}
+// Its attribute will be tuple (begin,end) that parse() consumed
+template < typename Parser >
+rules::itpair_t<Parser>
+view( Parser parser )
 {
   return { parser };
 }

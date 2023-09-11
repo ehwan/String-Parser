@@ -89,12 +89,16 @@ struct attribute<rules::repeat_t<P>,I>
   >::type;
 };
 
+
+// repeat parser min_ times in minimum max_times in maximum
 template < typename Parser >
 rules::repeat_t<Parser>
 repeat( Parser parser , unsigned int min_ , unsigned int max_ )
 {
   return { parser , min_ , max_ };
 }
+
+// repeat parser count times
 template < typename Parser >
 rules::repeat_t<Parser>
 repeat( Parser parser , unsigned int count )

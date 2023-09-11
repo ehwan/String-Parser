@@ -33,7 +33,14 @@ struct attribute< rules::always_t , I >
 {
   using type = unused_t;
 };
+// always return 'd' as parse result
+// 'always-true-parser' can be used with 'or_' 
+// to make 'optional' parser ( '?' for REGEX )
 using always_t = rules::always_t;
+
+// always return 'd' as parse result
+// 'always-true-parser' can be used with 'or_' 
+// to make 'optional' parser ( '?' for REGEX )
 inline rules::always_t always( bool parse_result )
 {
   return { parse_result };

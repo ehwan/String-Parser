@@ -11,6 +11,7 @@
 
 #include <map>
 #include <iterator>
+#include <string_view>
 #include <vector>
 #include <string>
 #include <cstring>
@@ -81,6 +82,13 @@ struct dictionary_t
     add( c_str, c_str+std::strlen(c_str), attr );
   }
 
+  #if __cplusplus >= 201500
+  void add( std::basic_string_view<CharType> view, Attr const& attr )
+  {
+    add( view.begin(), view.end(), attr );
+  }
+  #endif
+
   template < typename I >
   parse_result_t<Attr>
   parse( I &begin , I end ) const
@@ -122,6 +130,9 @@ struct attribute< rules::dictionary_t<Attr,CharType>,I>
   using type = Attr;
 };
 
+// contains multiple 'words'
+// test if input contains on of 'words'
+// longest matching string using trie
 template < typename Attr , typename CharType=char >
 using dictionary = rules::dictionary_t<Attr,CharType>;
 

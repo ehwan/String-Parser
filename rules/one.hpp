@@ -67,10 +67,12 @@ struct attribute< rules::one_t<T> , I >
 {
   using type = typename std::iterator_traits<I>::value_type;
 };
+
+// match one character's value is equal to one
 template < typename T >
-auto one( T x )
+auto one( T value )
 {
-  return rules::make_one( rules::single_check<T>(x) );
+  return rules::make_one( rules::single_check<T>(value) );
 }
 
 }}
