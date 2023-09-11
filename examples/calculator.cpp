@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-#include "../parser.hpp"
+#include "parser.hpp"
 
 namespace ep = eh::parser;
 

@@ -9,10 +9,16 @@ project( basic )
 add_executable(basic
   examples/basic.cpp
 )
+target_include_directories( basic PUBLIC
+  ./include
+)
 
 project( calculator )
 add_executable(calculator
   examples/calculator.cpp
+)
+target_include_directories( calculator PUBLIC
+  ./include
 )
 
 set_target_properties(

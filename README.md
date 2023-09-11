@@ -3,6 +3,9 @@ Header only template-based string parser and pattern matcher.
 
 fully supported with clang / c++14
 
+## Install
+All headers are in `include` directory.
+
 ## Overview
 
 Note that in all examples,
