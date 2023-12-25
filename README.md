@@ -1,5 +1,5 @@
 # String Parser
-Header only template-based string parser and pattern matcher.
+Header only template-based LL parser generator.
 
 fully supported with clang / c++14
 
