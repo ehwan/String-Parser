@@ -19,8 +19,6 @@
 #include "rules/characterset.hpp"
 #include "rules/dictionary.hpp"
 
-#include "token.hpp"
-
 /*
  * iterator usage :
  *    ++i

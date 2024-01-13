@@ -1,6 +1,8 @@
 #include "instruction.hpp"
 #include "program.hpp"
-#include "lexer.hpp"
+#include "tokenizer.hpp"
+
+namespace eh { namespace compiler {
 
 void instruction_pushstack_t::run( program_t *p )
 {
@@ -13,15 +15,15 @@ void instruction_print_t::run( program_t *p )
 }
 void instruction_var_t::run( program_t *p )
 {
-  p->stack.push( p->memory[ x->second.offset ] );
+  p->stack.push( x->second );
 }
 void instruction_read_t::run( program_t *p )
 {
-  std::cin >> p->memory[x->second.offset];
+  std::cin >> x->second;
 }
 void instruction_assign_t::run( program_t *p )
 {
-  p->memory[x->second.offset] = p->stack.top();
+  x->second = p->stack.top();
   p->stack.pop();
 }
 void instruction_unary_t::run( program_t *p )
@@ -65,22 +67,22 @@ void instruction_binary_t::run( program_t *p )
   case '<':
     a = ( a < b );
     break;
-  case TOKEN_LEQ:
+  case token_t::TOKEN_LEQ:
     a = ( a <= b );
     break;
-  case TOKEN_GEQ:
+  case token_t::TOKEN_GEQ:
     a = ( a >= b );
     break;
-  case TOKEN_EQ:
+  case token_t::TOKEN_EQ:
     a = ( a == b );
     break;
-  case TOKEN_NEQ:
+  case token_t::TOKEN_NEQ:
     a = ( a != b );
     break;
-  case TOKEN_LOGICAL_AND:
+  case token_t::TOKEN_LOGICAL_AND:
     a = ( a && b );
     break;
-  case TOKEN_LOGICAL_OR:
+  case token_t::TOKEN_LOGICAL_OR:
     a = ( a || b );
     break;
   }
@@ -103,3 +105,5 @@ void instruction_goto_t::run( program_t *p )
   }
   p->current_instruct = data->second;
 }
+
+}}

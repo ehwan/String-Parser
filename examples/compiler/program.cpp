@@ -1,20 +1,23 @@
 #include "program.hpp"
 #include "instruction.hpp"
 
+namespace eh { namespace compiler {
+
 void program_t::run()
 {
   stack.push( instructions.size()-1 );
-  current_instruct = main;
+  auto main_it = labels.find( "main" );
+  if( main_it == labels.end() )
+  {
+    std::cout << "No function main()\n";
+    return;
+  }
+  current_instruct = main_it->second;
   while( current_instruct < instructions.size() )
   {
     instructions[ current_instruct ]->run( this );
     ++current_instruct;
   }
 }
-program_t::~program_t()
-{
-  for( auto &i : instructions )
-  {
-    delete i;
-  }
-}
+
+}}

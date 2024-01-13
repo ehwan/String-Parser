@@ -1,35 +1,39 @@
 #pragma once
 
-#include <memory>
 #include "global.hpp"
+#include <memory>
 
-#define NODE_STATEMENTS 1
-#define NODE_NUM 2
-#define NODE_VAR 3
-#define NODE_PRINT 4
-#define NODE_READ 5
-#define NODE_ASSIGN 6
-#define NODE_BINARYOP 7
-#define NODE_UNARYOP 8
-#define NODE_WHILE 9
-#define NODE_IF 10
-#define NODE_FUNCTION 11
-#define NODE_LABEL 12
-#define NODE_GOTO 13
-#define NODE_RETURN 14
+namespace eh { namespace compiler {
+
+using node_ptr = std::unique_ptr<node_t>;
 
 struct node_t
 {
-  int type;
-  node_ptr left, right;
+  constexpr static int NODE_STATEMENTS = 1;
+  constexpr static int NODE_NUM = 2;
+  constexpr static int NODE_VAR = 3;
+  constexpr static int NODE_PRINT = 4;
+  constexpr static int NODE_READ = 5;
+  constexpr static int NODE_ASSIGN = 6;
+  constexpr static int NODE_BINARYOP = 7;
+  constexpr static int NODE_UNARYOP = 8;
+  constexpr static int NODE_WHILE = 9;
+  constexpr static int NODE_IF = 10;
+  constexpr static int NODE_FUNCTION = 11;
+  constexpr static int NODE_LABEL = 12;
+  constexpr static int NODE_GOTO = 13;
+  constexpr static int NODE_RETURN = 14;
 
-  node_t( int t , node_ptr l=nullptr , node_ptr r=nullptr )
+  int type;
+  std::unique_ptr<node_t> left, right;
+
+  node_t( int t , node_ptr l=nullptr, node_ptr r=nullptr )
     : type(t) ,
       left( std::move(l) ) , right( std::move(r) )
   {
   }
   virtual ~node_t(){}
-  virtual void emit( program_t * ) = 0;
+  virtual void emit( program_t* ) = 0;
 };
 
 struct node_statements
@@ -147,8 +151,11 @@ struct node_binaryop
 struct node_label
   : node_t
 {
+  // named label
   label_map::iterator data;
+  // is return statement?
   bool return_;
+
   node_label( label_map::iterator d , node_ptr a , bool ret )
     : node_t( NODE_LABEL , std::move(a) ) ,
       data( d ) ,
@@ -206,3 +213,7 @@ struct node_if
   void emit( program_t *p );
 };
 */
+
+}}
+
+

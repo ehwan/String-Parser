@@ -1,11 +1,12 @@
 #include <iostream>
+#include <sys/fcntl.h>
 #include <vector>
 #include <unistd.h>
 #include <fcntl.h>
-#include "lexer.hpp"
-#include "compiler.hpp"
 #include "program.hpp"
 #include "node.hpp"
+#include "tokenizer.hpp"
+#include "compiler.hpp"
 
 std::vector<char> read_from( int f )
 {
@@ -23,21 +24,37 @@ std::vector<char> read_from( int f )
 }
 int main( int argc , const char** argv )
 {
-  /*
   if( argc < 2 )
   {
     std::cout << "arguments error\n";
+    std::cout << "USAGE:\n";
+    std::cout << argv[0] << " {file_name}\n";
     return 0;
   }
-  int f = open( argv[1] , O_RDONLY );
-  */
-  std::vector<char> stream = read_from(0);
+  eh::compiler::tokenizer_t tokenizer;
+  int file_desc = open( argv[1], O_RDONLY );
+  tokenizer.input = read_from( file_desc );
+  close( file_desc );
 
-  auto tokens = tokenize( stream.begin() , stream.end() );
+  std::cout << "Start Tokenizing...\n";
+  bool tokenize_result = tokenizer.parse();
+  std::cout << "Tokenizing Result: ";
+  std::cout << std::boolalpha << tokenize_result << "\n";
+  for( auto &t : tokenizer.tokens )
+  {
+    std::cout << t.raw << ": " << t.type << "\n";
+  }
 
-  compiler_t compiler;
-  auto program = compiler.compile( tokens.begin() , tokens.end() );
-  program->run();
+  std::cout << "Tokenizing End...\n";
+
+  std::cout << "Compiling Start...\n";
+  eh::compiler::compiler_t compiler;
+  compiler.tokens = std::move( tokenizer.tokens );
+  auto compile_result = compiler.compile();
+  std::cout << "Compiling End... : " << std::boolalpha << compile_result << "\n";
+
+  std::cout << "~~~~~~~~~~~~~~~~~~~~~ Program Result ~~~~~~~~~~~~~~~~~~~~~\n";
+  compiler.program->run();
 
   return 0;
 }

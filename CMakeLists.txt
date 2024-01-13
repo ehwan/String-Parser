@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 set( CMAKE_C_COMPILER /usr/bin/clang )
 set( CMAKE_CXX_COMPILER /usr/bin/clang++ )
@@ -21,8 +21,21 @@ target_include_directories( calculator PUBLIC
   ./include
 )
 
+project( compiler )
+add_executable( compiler
+  examples/compiler/node.cpp
+  examples/compiler/instruction.cpp
+  examples/compiler/tokenizer.cpp
+  examples/compiler/compiler.cpp
+  examples/compiler/program.cpp
+  examples/compiler/main.cpp
+)
+target_include_directories( compiler PUBLIC
+  ./include
+)
+
 set_target_properties(
-  basic calculator
+  basic calculator compiler
   PROPERTIES
   LANGUAGE CXX
   CXX_STANDARD 17
