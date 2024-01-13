@@ -1,5 +1,7 @@
 #include "rules/dictionary.hpp"
 #include "rules/stringmatch.hpp"
+#include "unused.hpp"
+#include <cstdint>
 #include <gtest/gtest.h>
 #include <parser.hpp>
 #include <string>
@@ -176,6 +178,143 @@ TEST( ParserTest, Dictionary )
   res = dict.parse( begin, src.end() );
   EXPECT_FALSE( res );
   EXPECT_EQ( begin, src.begin()+10+6 );
+}
+
+TEST( ParserTest, Action )
+{
+  std::string src = "12345";
+
+  auto begin = src.begin();
+
+  // action takes one character and return nothing
+  int old_attr;
+  auto parse_digit0 = ep::digit[(
+    [&old_attr]( int ch )
+    {
+      old_attr = ch;
+    } )];
+
+  auto res = parse_digit0.parse( begin, src.end() );
+  EXPECT_TRUE( res );
+  EXPECT_EQ( typeid(res.get()), typeid(ep::unused_t) );
+  EXPECT_EQ( begin, src.begin()+1 );
+  EXPECT_EQ( old_attr, '1' );
+
+  // action takes one character and return new value
+  auto parse_digit1 = ep::digit[(
+    []( int ch ) -> long long
+    {
+      return ch * 2;
+    } )];
+  auto res2 = parse_digit1.parse( begin, src.end() );
+  EXPECT_TRUE( res2 );
+  EXPECT_EQ( typeid(res2.get()), typeid(long long) );
+  EXPECT_EQ( res2.get(), '2'*2 );
+  EXPECT_EQ( begin, src.begin()+2 );
+
+
+  // action takes nothing (for unused attribute parser) and return new value
+  auto parse_digit2 = ep::digit.unused()[(
+    []() -> float
+    {
+      return 1.0f;
+    }
+  )];
+  auto res3 = parse_digit2.parse( begin, src.end() );
+  EXPECT_TRUE( res3 );
+  EXPECT_EQ( typeid(res3.get()), typeid(float) );
+  EXPECT_EQ( begin, src.begin()+3 );
+  EXPECT_LE( std::abs(res3.get()-1.0f), 1e-6f );
+
+  auto parse_two_digit =
+    (ep::digit >> ep::digit)[(
+      []( int a, int b )
+      {
+        // reversed
+        return std::pair<int,int>(b, a);
+      } )];
+  auto res4 = parse_two_digit.parse( begin, src.end() );
+  EXPECT_TRUE( res4 );
+  EXPECT_EQ( typeid(res4.get()), typeid(std::pair<int,int>) );
+  EXPECT_EQ( res4.get().first, '5' );
+  EXPECT_EQ( res4.get().second, '4' );
+  EXPECT_EQ( begin, src.begin()+5 );
+
+  auto res5 = parse_digit2.parse( begin, src.end() );
+  EXPECT_FALSE( res5 );
+  EXPECT_EQ( begin, src.end() );
+}
+
+TEST( ParserTest, Sequence )
+{
+  std::string src = "0123456789012";
+  auto begin = src.begin();
+
+  //                         int          int
+  // new attribute will be tuple<int,int>
+  auto two_digit_parser = ep::digit >> ep::digit;
+
+  auto res = two_digit_parser.parse( begin, src.end() );
+  EXPECT_TRUE( res );
+  EXPECT_EQ( begin, src.begin()+2 );
+  EXPECT_EQ( std::get<0>(res.get()), '0' );
+  EXPECT_EQ( std::get<1>(res.get()), '1' );
+
+  auto three_digit_parser = 
+    ep::seq(
+      ep::digit, ep::digit, ep::digit
+    );
+  auto res2 = three_digit_parser.parse( begin, src.end() );
+  EXPECT_TRUE( res2 );
+  EXPECT_EQ( begin, src.begin()+5 );
+  EXPECT_EQ( std::get<0>(res2.get()), '2' );
+  EXPECT_EQ( std::get<1>(res2.get()), '3' );
+  EXPECT_EQ( std::get<2>(res2.get()), '4' );
+
+  // tuple and tuple will be merge to new tuple
+  auto five_digit_parser =
+    two_digit_parser >> three_digit_parser;
+  auto res5 = five_digit_parser.parse( begin, src.end() );
+  EXPECT_TRUE( res5 );
+  EXPECT_EQ( begin, src.begin()+10 );
+  EXPECT_EQ( std::get<0>(res5.get()), '5' );
+  EXPECT_EQ( std::get<1>(res5.get()), '6' );
+  EXPECT_EQ( std::get<2>(res5.get()), '7' );
+  EXPECT_EQ( std::get<3>(res5.get()), '8' );
+  EXPECT_EQ( std::get<4>(res5.get()), '9' );
+
+  // parse failed; only 3 characters left
+  res5 = five_digit_parser.parse( begin, src.end() );
+  EXPECT_FALSE( res5 );
+  EXPECT_EQ( begin, src.begin()+10 );
+
+  res2 = three_digit_parser.parse( begin, src.end() );
+  EXPECT_TRUE( res2 );
+  EXPECT_EQ( begin, src.end() );
+  EXPECT_EQ( std::get<0>(res2.get()), '0' );
+  EXPECT_EQ( std::get<1>(res2.get()), '1' );
+  EXPECT_EQ( std::get<2>(res2.get()), '2' );
+
+
+  begin = src.begin();
+
+  // unused and int attribute -> int
+  {
+    auto unused_and_int = ep::digit.unused() >> ep::digit;
+    auto res0 = unused_and_int.parse( begin, src.end() );
+    EXPECT_TRUE( res0 );
+    EXPECT_EQ( res0.get(), '1' );
+  }
+
+  // int and tuple -> tuple< int, *unpacked tuple >
+  {
+    auto int_and_tuple = ep::digit >> two_digit_parser;
+    auto res0 = int_and_tuple.parse( begin, src.end() );
+    EXPECT_TRUE( res0 );
+    EXPECT_EQ( std::get<0>(res0.get()), '2' );
+    EXPECT_EQ( std::get<1>(res0.get()), '3' );
+    EXPECT_EQ( std::get<2>(res0.get()), '4' );
+  }
 }
 
 int main( int argc, char** argv )
