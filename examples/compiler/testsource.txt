@@ -1,6 +1,7 @@
 func1()
 {
   var1 = 20;
+  // this is comment
   print var1 * 10 + 10;
   return;
   print 20;
@@ -8,6 +9,13 @@ func1()
 main()
 {
   func1();
+
+  /*
+  this
+  is also
+  a comment
+  */
+
   func2();
 }
 func2()

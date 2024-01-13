@@ -33,6 +33,7 @@ struct string_match_t
         begin = begin0;
         return {false};
       }
+      ++begin;
     }
     return {true};
   }

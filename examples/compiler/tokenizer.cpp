@@ -9,9 +9,23 @@ bool tokenizer_t::parse()
   using namespace ep::literals;
 
   auto c_comment =
-    ("/*"_p >> *(ep::any.unused() - "*/"_p) >> "*/"_p);
+    ("/*"_p >> 
+      (*(ep::any.unused() - "*/"_p)) >> 
+      "*/"_p).view()
+    [(
+      []( auto a, auto b )
+      {
+        std::cout << "C Comment: " << std::string(a,b) << "\n";
+      }
+    )];
   auto cpp_comment =
-    ("//"_p >> *(ep::any.unused() - '\n'_p) >> '\n'_p.notconsume()).unused();
+    ("//"_p >> *(ep::any.unused() - '\n'_p) >> '\n'_p.notconsume()).view()
+    [(
+      []( auto a, auto b )
+      {
+        std::cout << "CPP Comment: " << std::string(a,b) << "\n";
+      }
+    )];
 
   auto ignore = c_comment | cpp_comment | " \n\t"_pone.unused();
 

@@ -310,3 +310,101 @@ virtual_pattern = compile_time_pattern2;
 virtual_pattern.parse( begin, str.end() );
 virtual_reference_pattern.parse( begin, str.end() );
 ```
+
+
+### Simple Compiler
+examples/compiler/
+
+```bash
+> cat examples/compiler/testsource.txt
+func1()
+{
+  var1 = 20;
+  // this is comment
+  print var1 * 10 + 10;
+  return;
+  print 20;
+}
+main()
+{
+  func1();
+
+  /*
+  this
+  is also
+  a comment
+  */
+
+  func2();
+}
+func2()
+{
+  print 30;
+  return;
+  print 40;
+}
+
+
+> ./compiler ../examples/compiler/testsource.txt
+Start Tokenizing...
+CPP Comment: // this is comment
+C Comment: /*
+  this
+  is also
+  a comment
+  */
+Tokenizing Result: false
+func1: 1002
+(: 40
+): 41
+{: 123
+var1: 1002
+=: 61
+20: 1001
+;: 59
+print: 1004
+var1: 1002
+*: 42
+10: 1001
++: 43
+10: 1001
+;: 59
+return: 1013
+;: 59
+print: 1004
+20: 1001
+;: 59
+}: 125
+main: 1002
+(: 40
+): 41
+{: 123
+func1: 1002
+(: 40
+): 41
+;: 59
+func2: 1002
+(: 40
+): 41
+;: 59
+}: 125
+func2: 1002
+(: 40
+): 41
+{: 123
+print: 1004
+30: 1001
+;: 59
+return: 1013
+;: 59
+print: 1004
+40: 1001
+;: 59
+}: 125
+Tokenizing End...
+Compiling Start...
+Compiling End... : true
+~~~~~~~~~~~~~~~~~~~~~ Program Result ~~~~~~~~~~~~~~~~~~~~~
+210
+30
+```
