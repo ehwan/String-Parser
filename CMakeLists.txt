@@ -40,3 +40,18 @@ set_target_properties(
   LANGUAGE CXX
   CXX_STANDARD 17
 )
+
+
+find_package( GTest )
+project( test CXX )
+add_executable( test
+  test/test.cpp
+)
+target_link_libraries( test PUBLIC GTest::gtest )
+target_include_directories( test PUBLIC
+  ./include
+)
+set_target_properties( test PROPERTIES
+  LANGUAGE CXX
+  CXX_STANDARD 17
+)
